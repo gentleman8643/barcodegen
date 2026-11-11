@@ -1,0 +1,27 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="660" height="313" version="1.1" xmlns="http://www.w3.org/2000/svg">
+ <desc>Zint Generated Symbol</desc>
+ <g id="barcode" fill="#000000">
+  <rect x="0" y="0" width="660" height="313" fill="#FFFFFF"/>
+  <path d="M36 0h4v296.97h-4ZM44 0h4v296.97h-4ZM60 0h8v296.97h-8ZM72 0h4v296.97h-4ZM84 0h8v276.97h-8ZM100 0h4v276.97h-4ZM112 0h4v276.97h-4ZM124 0h8v276.97h-8ZM136 0h16v276.97h-16ZM156 0h4v276.97h-4ZM164 0h4v276.97h-4ZM180 0h8v276.97h-8ZM192 0h8v276.97h-8ZM212 0h4v276.97h-4ZM220 0h4v296.97h-4ZM228 0h4v296.97h-4ZM236 0h12v276.97h-12ZM256 0h4v276.97h-4ZM264 0h12v276.97h-12ZM284 0h4v276.97h-4ZM292 0h12v276.97h-12ZM312 0h4v276.97h-4ZM320 0h12v276.97h-12ZM340 0h4v276.97h-4ZM348 0h4v276.97h-4ZM360 0h12v276.97h-12ZM376 0h4v296.97h-4ZM388 0h4v296.97h-4ZM404 0h4v296.97h-4ZM412 0h4v296.97h-4ZM452 36h4v260.97h-4ZM460 36h8v260.97h-8ZM472 36h8v260.97h-8ZM488 36h8v260.97h-8ZM500 36h4v260.97h-4ZM512 36h4v260.97h-4ZM524 36h8v260.97h-8ZM536 36h4v260.97h-4ZM544 36h4v260.97h-4ZM564 36h4v260.97h-4ZM572 36h4v260.97h-4ZM580 36h4v260.97h-4ZM596 36h8v260.97h-8ZM608 36h4v260.97h-4ZM616 36h8v260.97h-8ZM636 36h4v260.97h-4Z"/>
+  <text x="17.4" y="311.37" text-anchor="end" font-family="OCRB, monospace" font-size="28">
+   0
+  </text>
+  <text x="148" y="311.37" text-anchor="middle" font-family="OCRB, monospace" font-size="40">
+   12345
+  </text>
+  <text x="304" y="311.37" text-anchor="middle" font-family="OCRB, monospace" font-size="40">
+   00005
+  </text>
+  <text x="430.6" y="311.37" text-anchor="start" font-family="OCRB, monospace" font-size="28">
+   8
+  </text>
+  <text x="548" y="31.2" text-anchor="middle" font-family="OCRB, monospace" font-size="40">
+   12345
+  </text>
+  <text x="662" y="31.2" text-anchor="end" font-family="OCRB, monospace" font-size="40">
+   &gt;
+  </text>
+ </g>
+</svg>

@@ -1,0 +1,12 @@
+{
+  "name": "Zint Barcode Generator",
+  "short_name": "Zint",
+  "description": "Generate 100+ barcode types in your browser.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f6fb",
+  "theme_color": "#0b5fff",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

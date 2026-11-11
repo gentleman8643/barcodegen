@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zint Barcode Generator - QR Code, Code 128, EAN, Data Matrix and 100+ more</title>
+  <meta name="description" content="Free online barcode generator powered by Zint. Create QR Code, Code 128, EAN-13, UPC, Data Matrix, PDF417, Aztec, GS1 and 100+ symbologies. Runs entirely in your browser. Export SVG, PNG, EPS and more.">
+  <meta name="theme-color" content="#0b5fff">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Zint Barcode Generator">
+  <meta property="og:description" content="Create QR Code, Code 128, EAN, Data Matrix, PDF417 and 100+ barcode types. Private, fast, runs in your browser.">
+  <meta property="og:image" content="/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="modulepreload" href="/js/app.js">
+  <link rel="preload" href="/wasm/zint.wasm" as="fetch" type="application/wasm" crossorigin>
+  <script>
+    // Apply saved theme before first paint to avoid a flash
+    try { var t = localStorage.getItem('zint-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#preview-panel">Skip to preview</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M7 8h2v16H7zm4 0h1v16h-1zm3 0h3v16h-3zm5 0h1v16h-1zm3 0h2v16h-2z" fill="#fff"/></svg>
+      <div>
+        <h1>Zint Barcode Generator</h1>
+        <p class="tagline">100+ barcode types. Runs in your browser. Nothing is uploaded.</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="badge" id="version-badge" title="Zint library version">Zint ...</span>
+      <button type="button" class="btn ghost" id="batch-open">Batch</button>
+      <button type="button" class="btn ghost icon" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <form id="controls" class="panel controls" autocomplete="off" novalidate>
+      <section class="card" aria-labelledby="h-type">
+        <h2 id="h-type">Barcode type</h2>
+        <div class="field">
+          <label for="symbology-search" class="sr-only">Search barcode types</label>
+          <input type="search" id="symbology-search" placeholder="Search 100+ types (e.g. QR, EAN, postal)" aria-controls="symbology">
+        </div>
+        <div class="field">
+          <label for="symbology">Symbology</label>
+          <select id="symbology"></select>
+          <p class="hint" id="symbology-hint"></p>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="h-data">
+        <div class="card-head">
+          <h2 id="h-data">Content</h2>
+          <button type="button" class="link" id="example-btn">Insert example</button>
+        </div>
+        <div class="field">
+          <label for="data">Data to encode</label>
+          <textarea id="data" rows="4" spellcheck="false" placeholder="Type or paste your data"></textarea>
+          <p class="hint"><span id="char-count">0</span> characters</p>
+        </div>
+        <div class="field" id="primary-field" hidden>
+          <label for="primary" id="primary-label">Primary / linear data</label>
+          <input type="text" id="primary" spellcheck="false">
+          <p class="hint" id="primary-hint"></p>
+        </div>
+        <div class="checks">
+          <label class="check" id="gs1-row" hidden><input type="checkbox" id="gs1"> <span>GS1 data, using <code>(AI)value</code> notation</span></label>
+          <label class="check"><input type="checkbox" id="escape"> <span>Process escape sequences (<code>\n</code>, <code>\xNN</code>, <code>\uNNNN</code>)</span></label>
+        </div>
+      </section>
+
+      <section class="card" id="symbology-options-card" aria-labelledby="h-sym" hidden>
+        <h2 id="h-sym">Symbol options</h2>
+        <div id="symbology-options" class="grid-2"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-look">
+        <h2 id="h-look">Appearance</h2>
+        <div class="grid-2">
+          <div class="field">
+            <label for="scale">Size <output id="scale-out">1</output>&times;</label>
+            <input type="range" id="scale" min="0.5" max="10" step="0.5" value="1">
+          </div>
+          <div class="field" id="height-field">
+            <label for="height">Height <output id="height-out">Auto</output></label>
+            <input type="range" id="height" min="0" max="200" step="1" value="0">
+          </div>
+          <div class="field">
+            <label for="fg">Bars colour</label>
+            <div class="color-row"><input type="color" id="fg" value="#000000"><input type="text" id="fg-text" value="000000" maxlength="8" aria-label="Bars colour as hex" spellcheck="false"></div>
+          </div>
+          <div class="field">
+            <label for="bg">Background</label>
+            <div class="color-row"><input type="color" id="bg" value="#ffffff"><input type="text" id="bg-text" value="FFFFFF" maxlength="8" aria-label="Background colour as hex" spellcheck="false"></div>
+          </div>
+          <label class="check span-2"><input type="checkbox" id="transparent"> <span>Transparent background</span></label>
+          <div class="field">
+            <label for="margin-x">Side margin (modules)</label>
+            <input type="number" id="margin-x" min="0" max="100" value="0">
+          </div>
+          <div class="field">
+            <label for="margin-y">Top/bottom margin (modules)</label>
+            <input type="number" id="margin-y" min="0" max="100" value="0">
+          </div>
+          <div class="field">
+            <label for="border">Border</label>
+            <select id="border">
+              <option value="none">None</option>
+              <option value="box">Box</option>
+              <option value="bind">Bars above and below</option>
+              <option value="bindtop">Bar above only</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="border-width">Border width</label>
+            <input type="number" id="border-width" min="0" max="16" value="1">
+          </div>
+          <div class="field">
+            <label for="rotate">Rotation</label>
+            <select id="rotate">
+              <option value="0">0&deg;</option>
+              <option value="90">90&deg;</option>
+              <option value="180">180&deg;</option>
+              <option value="270">270&deg;</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="quiet">Quiet zones</label>
+            <select id="quiet">
+              <option value="default">Default</option>
+              <option value="add">Add compliant quiet zones</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+        </div>
+        <div class="checks">
+          <label class="check" id="hrt-row"><input type="checkbox" id="hrt" checked> <span>Show human-readable text</span></label>
+          <div class="sub-checks" id="text-opts">
+            <label class="check"><input type="checkbox" id="text-small"> <span>Smaller text</span></label>
+            <label class="check"><input type="checkbox" id="text-bold"> <span>Bold text</span></label>
+          </div>
+          <label class="check" id="guard-row" hidden><input type="checkbox" id="guard"> <span>Show quiet zone markers (&lt; &gt;) on EAN/UPC</span></label>
+          <label class="check" id="dotty-row" hidden><input type="checkbox" id="dotty"> <span>Draw modules as dots</span></label>
+          <label class="check" id="compliant-row" hidden><input type="checkbox" id="compliant"> <span>Use standard-compliant height</span></label>
+          <label class="check" id="readerinit-row" hidden><input type="checkbox" id="readerinit"> <span>Reader initialisation (programming)</span></label>
+        </div>
+        <p class="warn" id="contrast-warning" role="status" hidden>Low contrast between bars and background. Many scanners need strong contrast, dark bars on a light background work best.</p>
+      </section>
+
+      <details class="card advanced">
+        <summary><h2>Advanced</h2></summary>
+        <div class="grid-2">
+          <div class="field" id="eci-field">
+            <label for="eci">Character set (ECI)</label>
+            <select id="eci"></select>
+          </div>
+          <div class="field">
+            <label for="dpmm">Print resolution (dots per mm)</label>
+            <input type="number" id="dpmm" min="0" max="1000" step="1" value="0">
+            <p class="hint">PNG, GIF, BMP, TIFF, PCX, EMF. 0 = none. 12 is about 300 dpi.</p>
+          </div>
+          <div class="field">
+            <label for="fmt-svg-font">SVG text</label>
+            <select id="fmt-svg-font">
+              <option value="embed">Embed font (exact look everywhere)</option>
+              <option value="system">Use system font (smaller file)</option>
+            </select>
+          </div>
+          <label class="check span-2"><input type="checkbox" id="strict"> <span>Strict mode: treat warnings as errors</span></label>
+        </div>
+      </details>
+
+      <div class="actions-row">
+        <button type="button" class="btn ghost" id="reset-btn">Reset all</button>
+      </div>
+    </form>
+
+    <section class="panel preview" id="preview-panel" aria-labelledby="h-preview" tabindex="-1">
+      <div class="card sticky">
+        <div class="card-head">
+          <h2 id="h-preview">Preview</h2>
+          <span class="meta" id="meta" aria-live="off"></span>
+        </div>
+        <div class="stage" id="stage">
+          <img id="preview-img" alt="Generated barcode preview" hidden>
+          <div class="empty" id="empty">Enter some data to generate a barcode.</div>
+        </div>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+        <p class="hrt-line" id="hrt-line" hidden></p>
+
+        <div class="export">
+          <div class="export-main">
+            <label for="format" class="sr-only">File format</label>
+            <select id="format"></select>
+            <button type="button" class="btn primary" id="download-btn">Download</button>
+          </div>
+          <p class="hint" id="format-note"></p>
+          <div class="export-more">
+            <button type="button" class="btn" id="copy-img-btn">Copy image</button>
+            <button type="button" class="btn" id="copy-svg-btn">Copy SVG code</button>
+            <button type="button" class="btn" id="share-btn">Copy share link</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="batch-dialog" aria-labelledby="batch-title">
+    <form method="dialog" class="dialog-body" id="batch-form">
+      <h2 id="batch-title">Batch generate</h2>
+      <p class="hint">One entry per line. Uses the current barcode type and appearance settings. Everything is packed into a single ZIP.</p>
+      <label for="batch-data" class="sr-only">Batch data, one per line</label>
+      <textarea id="batch-data" rows="10" spellcheck="false" placeholder="ABC-0001&#10;ABC-0002&#10;ABC-0003"></textarea>
+      <div class="grid-2">
+        <div class="field">
+          <label for="batch-format">Format</label>
+          <select id="batch-format"></select>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <span class="hint" id="batch-count">0 items</span>
+        </div>
+      </div>
+      <p class="warn" id="batch-result" role="status" hidden></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn ghost" id="batch-cancel">Close</button>
+        <button type="button" class="btn primary" id="batch-run">Create ZIP</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <footer class="footer">
+    <p>
+      Powered by <a href="https://zint.org.uk" target="_blank" rel="noopener">Zint</a> (libzint, BSD-3-Clause) compiled to WebAssembly.
+      Zint &copy; Robin Stuart and contributors. This web interface is GPL-3.0-or-later.
+      <a href="https://zint.org.uk/manual/" target="_blank" rel="noopener">Manual</a>
+    </p>
+    <p class="hint">Always scan-test printed barcodes before production use.</p>
+  </footer>
+
+  <noscript><p class="noscript">This app needs JavaScript and WebAssembly to run.</p></noscript>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

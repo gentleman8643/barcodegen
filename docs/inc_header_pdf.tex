@@ -1,0 +1,49 @@
+%% For pandoc --include-in-header
+%%
+%% Start sections on new pages
+\usepackage{sectsty}
+\sectionfont{\clearpage}
+
+%% Place figures "here" (i.e. immediately, don't move them around)
+\usepackage{graphicx}
+\usepackage{float}
+\floatplacement{figure}{H}
+
+%% For glossary definition list
+%% https://github.com/jgm/pandoc/wiki/Pandoc-Tricks#definition-list-terms-on-their-own-line-in-latex
+\let\originalitem\item
+\makeatletter
+\renewcommand{\item}[1][\@nil]{%
+    \def\tmp{#1}
+    \ifx\tmp\@nnil\originalitem\else\originalitem[#1]\hfill\par\fi}
+\makeatother
+
+%% Use the wonderful `tcolorbox` instead of `framed` for fenced code blocks
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\renewenvironment{Shaded}{\begin{tcolorbox}[colframe=white,boxrule=0pt,boxsep=0.5mm,top=0mm,bottom=0mm,colback=shadecolor,breakable=true]}{\end{tcolorbox}}
+
+%% Text color for inline code
+\usepackage{xcolor}
+\definecolor{icfg}{HTML}{351c35} % "text-color" in modified "haddock.theme"
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{\textcolor{icfg}{\oldtexttt{#1}}}
+
+%% Make level-4 headings standalone (not run-in) - for some reason "-V block-headings" doesn't seem to work, so do
+%% what it does manually here
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+
+%% PDF metadata - the values are set in "docs/inc_before_body_pdf.tex" (otherwise may get overridden)
+\usepackage{hyperref}
+
+%% Reduce gap after figures
+\usepackage{caption}
+\captionsetup[figure]{belowskip=-6pt}
+
+%% Make footnotes go to bottom of page
+\usepackage[bottom]{footmisc}
+
+%% Stop xeCJK putting space before CJK char in double quotes
+\newXeTeXintercharclass\dquote
+\XeTeXcharclass`"=\dquote

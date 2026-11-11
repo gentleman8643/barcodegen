@@ -1,0 +1,16 @@
+# Not needed to serve the static site (the compiled WASM is committed in web/public/wasm)
+docs
+backend
+backend_qt
+backend_tcl
+frontend
+frontend_qt
+getopt
+tools
+extras
+win32
+debian
+cmake
+.github
+web/node_modules
+web/.artifacts
